@@ -8,7 +8,7 @@ Using the command-line tool ```npx express-generator```. The Express Generator i
 - Step 2: Create a New Express App with Options
 ```express your-app-name```  
 	+ Available options:
-```
+	```
 $ express -h
 
   Usage: express [options] [dir]
@@ -26,4 +26,15 @@ $ express -h
     -c, --css <engine>  add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
         --git           add .gitignore
     -f, --force         force on non-empty directory
-```
+	```
+	+ Example:
+		* Create an API-only app (no views)
+			```express my-api --no-view```
+		* Create an app using Handlebars as the view engine
+			```express my-app -hbs```
+		* Create an app with EJS view engine and SASS for CSS
+			```express my-app -e --css sass```
+		* Create an app with a Git ignore file
+			```express my-app --git```
+	+ For our project, this is the setup command: ```express --session --css less --hbs app``` 
+- Step 3: Install dependencies - Check out ```package.json``` file, all the dependencies are added but haven't been installed. On Terminal,  cd to the folder that contains ```package.json``` file, which is also your application then run ```npm install``` 
