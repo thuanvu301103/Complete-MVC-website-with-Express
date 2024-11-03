@@ -38,17 +38,44 @@ Using the command-line tool ```npx express-generator```. The Express Generator i
 			```express my-app --git```
 	+ For our project, this is the setup command: ```express --session --css less --hbs app``` 
 - Step 3: Install dependencies - Check out ```package.json``` file, all the dependencies are added but haven't been installed. On Terminal, cd to the folder that contains ```package.json``` file, which is also your application then run ```npm install``` 
+
 ## Scaffold the Express Project
+
+### Environment Variables
+Environment variables are key-value pairs that are used to store configuration data outside of your code. They're especially useful for sensitive information (like API keys, database credentials, or settings that might differ between development and production environments) and are typically accessed by your application at runtime
+- Step 1: Install ```dotenv``` package (in case the ```package.json``` does not specify this package)
+	```
+	npm install dotenv
+	```
+- Step 2: Set up ```.env``` file
+	+ Create a ```.env``` file in the root directory of your project
+	+ Add environment variables in the format ```KEY=VALUE```
+		```
+		MONGO_URI = "mongodb://localhost:27017/mydb"
+		```
+- Step 3: Load ```dotenv``` and access these variable using ```process.env.YOUR _VARIABLE```. For example:
+	```javascript
+	require("dotenv").config(); // Load environment variables
+	console.log(process.env.MONGO_URI);
+
+	```
+
 ### Configuration
 - The settings that's flexible enough for every environment.
 - Create a separate module ```/config/index.js```. The application uses different ports for different servers
 - Update the entry point of site in the ```app.js```
-```
-const config = require('./config')();
-process.env.PORT = config.port;
-```
+	```javascript
+	const config = require('./config')();
+	process.env.PORT = config.port;
+	```
 - To switch between the configurations, just add the environment at the end. For example:
-```
-npm start production
-```
+	```
+	npm start production
+	```
 will run the server at port 5000.
+
+### Data
+
+#### Database approach
+
+#### File-based approach
