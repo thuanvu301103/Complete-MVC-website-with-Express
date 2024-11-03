@@ -8,25 +8,25 @@ Using the command-line tool ```npx express-generator```. The Express Generator i
 - Step 2: Create a New Express App with Options
 ```express your-app-name```  
 	+ Available options:
-	```
-$ express -h
+		```
+		$ express -h
 
-  Usage: express [options] [dir]
+		  Usage: express [options] [dir]
 
-  Options:
+		  Options:
 
-    -h, --help          output usage information
-        --version       output the version number
-    -e, --ejs           add ejs engine support
-        --hbs           add handlebars engine support
-        --pug           add pug engine support
-    -H, --hogan         add hogan.js engine support
-        --no-view       generate without view engine
-    -v, --view <engine> add view <engine> support (ejs|hbs|hjs|jade|pug|twig|vash) (defaults to jade)
-    -c, --css <engine>  add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
-        --git           add .gitignore
-    -f, --force         force on non-empty directory
-	```
+		    -h, --help          output usage information
+		        --version       output the version number
+		    -e, --ejs           add ejs engine support
+		        --hbs           add handlebars engine support
+		        --pug           add pug engine support
+		    -H, --hogan         add hogan.js engine support
+		        --no-view       generate without view engine
+		    -v, --view <engine> add view <engine> support (ejs|hbs|hjs|jade|pug|twig|vash) (defaults to jade)
+		    -c, --css <engine>  add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
+		        --git           add .gitignore
+		    -f, --force         force on non-empty directory
+		```
 	+ Example:
 		* Create an API-only app (no views)
 			```express my-api --no-view```
@@ -37,4 +37,18 @@ $ express -h
 		* Create an app with a Git ignore file
 			```express my-app --git```
 	+ For our project, this is the setup command: ```express --session --css less --hbs app``` 
-- Step 3: Install dependencies - Check out ```package.json``` file, all the dependencies are added but haven't been installed. On Terminal,  cd to the folder that contains ```package.json``` file, which is also your application then run ```npm install``` 
+- Step 3: Install dependencies - Check out ```package.json``` file, all the dependencies are added but haven't been installed. On Terminal, cd to the folder that contains ```package.json``` file, which is also your application then run ```npm install``` 
+## Scaffold the Express Project
+### Configuration
+- The settings that's flexible enough for every environment.
+- Create a separate module ```/config/index.js```. The application uses different ports for different servers
+- Update the entry point of site in the ```app.js```
+```
+const config = require('./config')();
+process.env.PORT = config.port;
+```
+- To switch between the configurations, just add the environment at the end. For example:
+```
+npm start production
+```
+will run the server at port 5000.
