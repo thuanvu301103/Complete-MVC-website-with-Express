@@ -173,7 +173,7 @@ will run the server at port 5000.
 #### Switch between database type
 - Create a variable in ```.env``` file ```DATABASE_OPTION = "file_based"```
 - In ```/app.js```, implement a mechanism to switch between database type:
-	```
+	```javascript
 	// Database connect
 	if (process.env.DATABASE_OPTION == "server") {
     		console.log("Database Server connection:")
@@ -279,7 +279,7 @@ will run the server at port 5000.
 
 	```
 - Create users view: ```/views/users.hbs```
-	```
+	```html
 	<h1>User List</h1>
 	<form action="/users" method="POST">
   		<input type="text" name="name" placeholder="Name" required>
@@ -303,8 +303,10 @@ var usersRouter = require('./routes/userRouter');
 // Register Routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
 ```
+
+## About API Endpoints
+Router handles API Endpoints (which is actually map API Endpoint to Controller's method)
 
 ## Appendix
 ### Kill process (server) running on specific port:
