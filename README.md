@@ -77,5 +77,39 @@ will run the server at port 5000.
 ### Data
 
 #### Database approach
+- The database connect setup is built in ```/config/db.js```
+- The following steps is built using ```MongoDB```
+- Steps:
+	+ Step 1: Install ```mongoose``` (in case the ```package.json``` does not specify this package)
+		```javascript
+		npm install mongoose
+		```
+	+ Step 2: Connect to MongoDB
+		```
+		const mongoose = require("mongoose");
+		require("dotenv").config(); // Load environment variables
+
+		// Function to connect to MongoDB
+		const connectDB = async () => {
+    			try {
+        			// Load MongoDB URI from environment variable
+        			const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/mydb";
+
+        			// Connect to MongoDB
+        			await mongoose.connect(mongoURI, {
+            				useNewUrlParser: true,
+            				useUnifiedTopology: true,
+        			});
+
+        			console.log("Connected to MongoDB successfully");
+    			} catch (error) {
+        			console.error("Failed to connect to MongoDB:", error.message);
+        			process.exit(1); // Exit process with failure
+    			}
+		};
+
+		// Export the connection function
+		module.exports = connectDB;
+		```
 
 #### File-based approach
