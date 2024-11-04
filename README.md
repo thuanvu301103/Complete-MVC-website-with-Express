@@ -81,11 +81,11 @@ will run the server at port 5000.
 - The following steps is built using ```MongoDB```
 - Steps:
 	+ Step 1: Install ```mongoose``` (in case the ```package.json``` does not specify this package)
-		```javascript
+		```
 		npm install mongoose
 		```
 	+ Step 2: Connect to MongoDB
-		```
+		```javascript
 		const mongoose = require("mongoose");
 		require("dotenv").config(); // Load environment variables
 
@@ -113,3 +113,97 @@ will run the server at port 5000.
 		```
 
 #### File-based approach
+
+## Set Up an MVC Pattern with Express
+
+### Models
+- The Model is responsible to manage the data or perform specific operations
+- Set up model for database approach (using MongoDb): Create a ```User``` model using ```Mongoose```
+	```javascript
+	// /models/User.js
+	const mongoose = require('mongoose');
+
+	const userSchema = new mongoose.Schema({
+  		name: {
+    			type: String,
+    			required: true,
+  		},
+  		email: {
+    			type: String,
+    			required: true,
+    			unique: true,
+  		},
+	});
+
+	const User = mongoose.model('User', userSchema);
+	module.exports = User;
+
+	```
+ 
+### Controllers
+- The Controller handles the model and view layers to work together
+- Set up controller for database approach (using MongoDb): Create a ```userController``` controller that handles the logic for interact with the ```User``` model
+	```javascript
+	// /controllers/userController.js
+	const User = require('../models/User');
+
+	// Display all users
+	exports.getAllUsers = async (req, res) => {
+  		try {
+    			const users = await User.find();
+    			res.render('users', { users });
+  		} catch (error) {
+    			res.status(500).send('Server Error');
+  		}
+	};
+
+	// Create a new user
+	exports.createUser = async (req, res) => {
+  		const { name, email } = req.body;
+  		const user = new User({ name, email });
+  		try {
+    			await user.save();
+    			res.redirect('/users');
+  		} catch (error) {
+    			res.status(400).send('Error creating user');
+  		}
+	};
+
+	```
+
+### Routers
+- Define routes that map to the controller methods
+- Set up router: Create a ```userRouter``` router thet map to ```userController```
+	```javascript
+	const express = require('express');
+	const router = express.Router();
+	const userController = require('../controllers/userController');
+
+	// Routes
+	router.get('/', userController.getAllUsers);
+	router.post('/', userController.createUser);
+
+	module.exports = router;
+
+	```
+
+### Views
+- The View (Presentation) is responsible to display the data provided by the model in a specific format
+- Create a main layout and the user view using ```Handlebars```: ```/views/layout.hbs```
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+  		<meta charset="UTF-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  		<title>User List</title>
+  		<link rel="stylesheet" href="/styles.css">
+	</head>
+	<body>
+  		<div class="container">
+    		{{{body}}} <!-- This is where the content of views will be injected -->
+  		</div>
+	</body>
+	</html>
+
+	```
