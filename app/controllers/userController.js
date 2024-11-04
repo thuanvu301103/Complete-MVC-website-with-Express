@@ -1,4 +1,9 @@
 const User = require('../models/User');
+const FileBased = require('../config/file_based_db');
+
+// For file_base approach
+const fileBasedConnection = FileBased.getInstance();
+fileBasedConnection.printConnect();
 
 // Display all users
 exports.getAllUsers = async (req, res) => {

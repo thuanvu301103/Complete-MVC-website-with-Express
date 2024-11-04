@@ -111,9 +111,79 @@ will run the server at port 5000.
 		// Export the connection function
 		module.exports = connectDB;
 		```
-- Import sample data to MongoDB: In ```/data/mydb/users.json```, I have prepare a *json file that contain data for user. Please import this *json file to MongoDB server under database named ```mydb``` and collection ```users``` 
+- Import sample data to MongoDB: In ```/data/database_data/mydb.users.json```, I have prepare a *json file that contain data for user. Please import this *json file to MongoDB server under database named ```mydb``` and collection ```users``` 
 
 #### File-based approach
+- The database connect setup is built in ```/config/file_based_db.js```
+- Steps:
+	+ Step 1: Build file_based_database class using ```Singleton``` pattern
+		```javascript
+		class File_based_Data {
+
+    			// Static property to hold the singleton instance
+    			static instance;
+
+    			constructor(data_folder_path) {
+        			if (File_based_Data.instance) {
+            				return File_based_Data.instance;
+        			}
+        			fs.readdir(data_folder_path, (err, files) => {
+            				if (err) {
+                				return console.error('Unable to scan directory: ' + err);
+            				}
+            				console.log("Files: ")
+            				// Loop through each file and log the name
+            				files.forEach(file => {
+                				console.log(file); // This will log the name of each file
+            				});
+        			});
+        			File_based_Data.instance = this;
+
+    			}
+
+    			// Static method to get the instance
+    			static getInstance() {
+        			if (!File_based_Data.instance) {
+            				File_based_Data.instance = new File_based_Data(); // Create the instance if it doesn't exist
+        			}
+        			return File_based_Data.instance; // Return the singleton instance
+    			}
+			
+			// Object method	
+			printConnect() {
+        			console.log("File Based Connection");
+    			}
+
+		}
+		```
+	+ Step 2: Initial file_based_database object in ```/app.js```
+		```javascript
+		var fileBasedLoader = require("./config/file_based_db"); // Import the file_based_db function
+    		var fileBasedData = new fileBasedLoader(path.join(__dirname, process.env.FILE_BASED_DATA_DIR));
+		```
+	+ Step 3: Use the object in other module in the project
+		```javascript
+		// /controllers/userController.js
+		const FileBased = require('../config/file_based_db');
+
+		const fileBasedConnection = FileBased.getInstance();
+		fileBasedConnection.printConnect();
+		```
+
+#### Switch between database type
+- Create a variable in ```.env``` file ```DATABASE_OPTION = "file_based"```
+- In ```/app.js```, implement a mechanism to switch between database type:
+	```
+	// Database connect
+	if (process.env.DATABASE_OPTION == "server") {
+    		console.log("Database Server connection:")
+    		connectDB();    // Connect to Database: MongoDB
+	}
+	else if (process.env.DATABASE_OPTION == "file_based") {
+    		console.log("File based Data is loading:")
+    		var fileBasedData = new fileBasedLoader(path.join(__dirname, process.env.FILE_BASED_DATA_DIR));
+	}
+	```
 
 ## Set Up an MVC Pattern with Express
 
@@ -227,61 +297,22 @@ will run the server at port 5000.
 ### Set Up the Express Application ```app.js```
 ```javascript
 // app.js
-var createError = require('http-errors');
-var express = require('express');
-var connectDB = require("./config/db"); // Import the database connection function
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var lessMiddleware = require('less-middleware');
-var logger = require('morgan');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/userRouter');
 
-// Site entry point
-const config = require('./config')();
-process.env.PORT = config.port;
-
-/*
-// Load environment variable
-const dotenv = require('dotenv').config();
-console.log(process.env.MONGO_URI);
-*/
-
-var app = express();
-connectDB();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(lessMiddleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Routers
+// Register Routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
-
 ```
+
+## Appendix
+### Kill process (server) running on specific port:
+- Find PID of server running on port:
+	```
+	netstat -ano | findstr :<Port number>
+	```
+- Kill that process:
+	```
+	taskkill /F /PID <PID>
+	```
