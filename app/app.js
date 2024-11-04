@@ -6,21 +6,16 @@ var cookieParser = require('cookie-parser');
 var lessMiddleware = require('less-middleware');
 var logger = require('morgan');
 
+// Reuire Routers
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/userRouter');
 
 // Site entry point
 const config = require('./config')();
 process.env.PORT = config.port;
 
-/*
-// Load environment variable
-const dotenv = require('dotenv').config();
-console.log(process.env.MONGO_URI);
-*/
-
 var app = express();
-connectDB();
+connectDB();    // Connect to Database: MongoDB
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,6 +28,7 @@ app.use(cookieParser());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

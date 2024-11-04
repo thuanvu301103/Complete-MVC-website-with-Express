@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\config"
+    "\\controllers",
+    "\\views"
   ],
-  "SelectedNode": "\\config\\index.js",
+  "SelectedNode": "\\views\\users.hbs",
   "PreviewInSolutionExplorer": false
 }
