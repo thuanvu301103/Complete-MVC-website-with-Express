@@ -38,6 +38,10 @@ Using the command-line tool ```npx express-generator```. The Express Generator i
 			```express my-app --git```
 	+ For our project, this is the setup command: ```express --session --css less --hbs app``` 
 - Step 3: Install dependencies - Check out ```package.json``` file, all the dependencies are added but haven't been installed. On Terminal, cd to the folder that contains ```package.json``` file, which is also your application then run ```npm install``` 
+Incase you want to uninstall dependencies:
+```
+npm uninstall <your_dependencies>
+```
 
 ## Scaffold the Express Project
 

@@ -1,9 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\controllers",
+    "\\config",
+    "\\data\\file_based_data",
+    "\\routes",
     "\\views"
   ],
-  "SelectedNode": "\\views\\users.hbs",
+  "SelectedNode": "\\routes\\userRouter.js",
   "PreviewInSolutionExplorer": false
 }
